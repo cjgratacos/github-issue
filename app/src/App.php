@@ -42,7 +42,7 @@ class App extends Application{
         // Register Monolog for logging
         $this->register(new MonologServiceProvider(), [
             "monolog.logfile" =>realpath(__DIR__."/../../app.log"),
-            "monolog.level"=>Logger::DEBUG,
+            "monolog.level"=>Logger::ERROR,
             "monolog.name"=>"GithubApp"
         ]);
     }
@@ -54,7 +54,7 @@ class App extends Application{
 
             $client = new Client();
             $travisManager = new TravisManager($client);
-
+            $this['monolog']->debug($request->request->all());
             if(!$travisManager->isValidRequestSignature($request)) {
                 return new Response("Invalid Signature", Response::HTTP_FORBIDDEN);
             }
@@ -76,7 +76,7 @@ class App extends Application{
         });
 
         $this->get("/", function(Application $app){
-            return new Response("Please post to the issue endpoint with the given key", 200);
+            return new Response("Please post to the issue endpoint", 200);
         });
     }
 }
