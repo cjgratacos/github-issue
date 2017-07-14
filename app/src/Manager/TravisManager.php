@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TravisManager
 {
 
-    private const  TRAVIS_SIGNATURE_HEADER = "signature";
+    private const TRAVIS_SIGNATURE_HEADER = "signature";
     private const TRAVIS_CONFIG_URI = "https://api.travis-ci.org";
     private const TRAVIS_PAYLOAD = "payload";
 
