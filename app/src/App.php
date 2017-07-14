@@ -38,14 +38,6 @@ class App extends Application{
         $this->post("/issue", function(Request $request)  {
 
             $configManager = new ConfigManager($this['config']);
-            $id = $request->query->get('id');
-            if (!$id) {
-                return new Response("No ID field was provided", Response::HTTP_PRECONDITION_FAILED);
-            }
-
-            if (!$configManager->isValidId($id)) {
-                return new Response("Invalid ID", Response::HTTP_UNAUTHORIZED);
-            }
 
             $client = new Client();
             $travisManager = new TravisManager($client);
