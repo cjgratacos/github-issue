@@ -1,0 +1,6 @@
+auth:
+  id: <UUID>
+  credentials:
+    username: "<USERNAME>"
+    password: "<PASSWORD>"
+    project: "<REPO:AUTHOR/REPONAME>"

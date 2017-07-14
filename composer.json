@@ -1,0 +1,27 @@
+{
+    "name": "carlosgr/github_issue",
+    "type": "project",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/yaml": "^3.3",
+        "silex/silex": "^2.1"
+    },
+    "license": "GNU GPL3",
+    "authors": [
+        {
+            "name": "cjgratacos",
+            "email": "cjgratacos@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cj\\Github\\": "app/src/"
+        }
+    },
+    "scripts": {
+        "run-server":[
+            "echo 'Started web server on http://localhost:8888'",
+            "php -S localhost:8888 -t web"
+        ]
+    }
+}
