@@ -4,7 +4,8 @@
     "require": {
         "guzzlehttp/guzzle": "^6.3",
         "symfony/yaml": "^3.3",
-        "silex/silex": "^2.1"
+        "silex/silex": "^2.1",
+        "monolog/monolog": "^1.23"
     },
     "license": "GNU GPL3",
     "authors": [

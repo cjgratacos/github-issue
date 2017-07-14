@@ -5,11 +5,13 @@ namespace Cj\Github;
 use Cj\Github\Manager\ConfigManager;
 use Cj\Github\Manager\TravisManager;
 use GuzzleHttp\Client;
+use Monolog\Logger;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Cj\Github\Manager\GithubIssueManager;
 use Symfony\Component\Yaml\Yaml;
+use Silex\Provider\MonologServiceProvider;
 
 class App extends Application{
 
@@ -31,7 +33,18 @@ class App extends Application{
             "config" => $config
         ]);
 
+        $this->registerServices();
+
         $this->loadRoutes();
+    }
+
+    private function registerServices():void {
+        // Register Monolog for logging
+        $this->register(new MonologServiceProvider(), [
+            "monolog.logfile" =>realpath(__DIR__."/../../app.log"),
+            "monolog.level"=>Logger::DEBUG,
+            "monolog.name"=>"GithubApp"
+        ]);
     }
 
     private function loadRoutes():void {
