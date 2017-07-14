@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 class TravisManager
 {
 
-    private const  TRAVIS_SIGNATURE_HEADER = "HTTP_SIGNATURE";
+    private const  TRAVIS_SIGNATURE_HEADER = "signature";
     private const TRAVIS_CONFIG_URI = "https://api.travis-ci.org";
+    private const TRAVIS_PAYLOAD = "payload";
 
     private $client;
 
@@ -29,14 +30,20 @@ class TravisManager
         return base64_decode($request->headers->get(TravisManager::TRAVIS_SIGNATURE_HEADER));
     }
 
-    public function getPayload(Request $request):string {
-        return $request->get('payload');
+    public function getDecodedPayload(Request $request):string {
+        return urldecode($this->getRawPayload($request));
+    }
+
+    public function getRawPayload(Request $request):string {
+        return $request->get(TravisManager::TRAVIS_PAYLOAD);
     }
 
     public function isValidRequestSignature(Request $request): bool {
-        $pubKey = $this->fetchTravisPublicKey();
+
+        $payload = $this->getDecodedPayload($request);
         $signature = $this->getRequestSignature($request);
-        $payload = $this->getPayload($request);
+        $pubKey = $this->fetchTravisPublicKey();
+
         return openssl_verify($payload,$signature,$pubKey) == 1;
     }
 

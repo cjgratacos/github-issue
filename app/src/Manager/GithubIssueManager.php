@@ -21,10 +21,10 @@ class GithubIssueManager {
     public function postIssueOnTravisFail(AuthModel $authModel, stdClass $travisResponse):void {
 
         $body = <<< EOT
-        Travis Deployment #{$travisResponse->number} failed for branch:[{$travisResponse->branch}]
-        The Travis CI deployment number:**{$travisResponse->number}** failed for the branch:**[{$travisResponse->branch}]**.
-        Build URL: {$travisResponse->build_url}
-        Build message: {$travisResponse->message}
+Travis Deployment #{$travisResponse->number} failed for branch:[{$travisResponse->branch}]
+The Travis CI deployment number:**{$travisResponse->number}** failed for the branch:**[{$travisResponse->branch}]**.
+Build URL: {$travisResponse->build_url}
+Build message: {$travisResponse->result_message}
 EOT;
         $this->client->post(GithubIssueManager::BASE_URI."/repos/{$authModel->getProject()}/issues", [
             "headers" => [

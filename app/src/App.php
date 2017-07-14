@@ -59,7 +59,7 @@ class App extends Application{
                 return new Response("Invalid Signature", Response::HTTP_FORBIDDEN);
             }
 
-            $payload = urldecode($travisManager->getPayload($request));
+            $payload = $travisManager->getDecodedPayload($request);
 
             $ghbIssueManager = new GithubIssueManager($client);
 
