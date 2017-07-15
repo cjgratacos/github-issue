@@ -54,7 +54,7 @@ class App extends Application{
 
             $client = new Client();
             $travisManager = new TravisManager($client);
-            $this['monolog']->debug($request->request->all());
+
             if(!$travisManager->isValidRequestSignature($request)) {
                 return new Response("Invalid Signature", Response::HTTP_FORBIDDEN);
             }
