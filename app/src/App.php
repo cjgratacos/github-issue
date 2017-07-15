@@ -66,7 +66,7 @@ class App extends Application{
             try {
                 $ghbIssueManager->postIssueOnTravisFail(
                     $configManager->getAuthModel(),
-                    json_decode($payload, true)
+                    $payload
                 );
             } catch (\Exception $e){
                 return new Response("The issue was not posted to Github: ".$e->getMessage(), Response::HTTP_FORBIDDEN);
