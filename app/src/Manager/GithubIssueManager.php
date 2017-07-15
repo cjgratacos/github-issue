@@ -18,13 +18,13 @@ class GithubIssueManager {
         $this->client = $client;
     }
 
-    public function postIssueOnTravisFail(AuthModel $authModel, array $travisResponse):void {
-
+    public function postIssueOnTravisFail(AuthModel $authModel, string $travisResponse):void {
+        $data = json_decode($travisResponse, true);
         $body = <<< EOT
-Travis Deployment **#{$travisResponse['number']}** failed for branch:[{$travisResponse['branch']}]
-The Travis CI deployment:**#{$travisResponse['number']}** failed for the branch:**[{$travisResponse['branch']}]**.
-Build URL: {$travisResponse['build_url']}
-Build message: `{$travisResponse['result_message']}`
+Travis Deployment **#{$data['number']}** failed for branch:[{$data['branch']}]
+The Travis CI deployment:**#{$data['number']}** failed for the branch:**[{$data['branch']}]**.
+Build URL: {$data['build_url']}
+Build message: `{$data['result_message']}`
 Payload Data: `{$travisResponse}`
 EOT;
         $this->client->post(GithubIssueManager::BASE_URI."/repos/{$authModel->getProject()}/issues", [
@@ -34,7 +34,7 @@ EOT;
                 "authorization" => "Basic ".base64_encode($authModel->getUsername().":".$authModel->getPassword())
             ],
             "json" => [
-                "title" =>"Travis build #{$travisResponse->number} failed",
+                "title" =>"Travis build #{$data['number']} failed",
                 "body" => $body,
                 "labels"=>["help wanted","build failed"]
             ]
