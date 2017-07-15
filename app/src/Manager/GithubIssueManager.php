@@ -21,8 +21,8 @@ class GithubIssueManager {
     public function postIssueOnTravisFail(AuthModel $authModel, string $travisResponse):void {
         $data = json_decode($travisResponse, true);
         $body = <<< EOT
-Travis Deployment **#{$data['number']}** failed for branch:[{$data['branch']}]
-The Travis CI deployment:**#{$data['number']}** failed for the branch:**[{$data['branch']}]**.
+Travis Deployment **#{$data['number']}** {$data['state']} for branch:[{$data['branch']}]
+The Travis CI deployment:**#{$data['number']}** {$data['state']} for the branch:**[{$data['branch']}]**.
 Build URL: {$data['build_url']}
 Build message: `{$data['result_message']}`
 Payload Data: `{$travisResponse}`
@@ -34,7 +34,7 @@ EOT;
                 "authorization" => "Basic ".base64_encode($authModel->getUsername().":".$authModel->getPassword())
             ],
             "json" => [
-                "title" =>"Travis build #{$data['number']} failed",
+                "title" =>"Travis build #{$data['number']} {$data['state']}",
                 "body" => $body,
                 "labels"=>["help wanted","build failed"]
             ]
