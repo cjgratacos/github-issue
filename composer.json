@@ -20,9 +20,13 @@
         }
     },
     "scripts": {
-        "run-server":[
+        "run-server-dev":[
             "echo 'Started web server on http://localhost:8888'",
             "php -S localhost:8888 -t web"
+        ],
+        "run-server-prod":[
+            "echo 'Started web server on http://0.0.0.0:80'",
+            "php -S 0.0.0.0:80 -t web"
         ]
     }
 }
