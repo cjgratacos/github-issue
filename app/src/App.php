@@ -67,6 +67,10 @@ class App extends Application{
             $payloadString = $travisManager->getDecodedPayload($request);
             $payload = json_decode($travisManager->getDecodedPayload($request),true);
 
+            // Handle when is not deployment project
+            if ($travisManager->getRepoSlug($request) !== $configModel->getProject()) {
+                return new Response("The project that was received in the payload is not listed as a supported project.", Response::HTTP_FORBIDDEN);
+            }
             // Handle when is not the deployment branch
             if ($payload['branch'] != $configModel->getDeployBranch()) {
                 return new Response("The branch in the received payload is not the deployment branch.", Response::HTTP_FORBIDDEN);

@@ -47,4 +47,15 @@ class TravisManager
         return openssl_verify($payload,$signature,$pubKey) == 1;
     }
 
+    public function getRepoInfo(Request $request): array {
+        $payload = json_decode($this->getRawPayload($request), true);
+
+        return $payload['repository'];
+    }
+
+    public function getRepoSlug(Request $request): string {
+        $repo = $this->getRepoInfo($request);
+        return $repo['owner_name'] .'/'.$repo['name'];
+    }
+
 }
