@@ -1,6 +1,11 @@
-auth:
-  id: <UUID>
-  credentials:
-    username: "<USERNAME>"
-    password: "<PASSWORD>"
-    project: "<REPO:AUTHOR/REPONAME>"
+---
+config:
+  - credentials:
+    	password: <PASSWORD>
+    	username: <USERNAME>
+  	deploy_branch: <BRANCHNAME>
+  	id: <UUID>
+  	project: "<REPO:AUTHOR/REPONAME>"
+  	states:
+      - "<STATUS:ONE>"
+      - "<STATUS:TWO>"

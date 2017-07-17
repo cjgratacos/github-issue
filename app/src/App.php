@@ -50,22 +50,36 @@ class App extends Application{
     private function loadRoutes():void {
         $this->post("/issue", function(Request $request)  {
 
-            $configManager = new ConfigManager($this['config']);
+            // Get ID
+            $id = $request->get('id')?:"";
 
+            // Load Config Manager
+            $configManager = new ConfigManager($this['config']->config);
+            $configModel = $configManager->getConfigById($id)?:$configManager->getFirstConfig();
+
+            // Generate Client
             $client = new Client();
+
+            // Generate Travis Manager
             $travisManager = new TravisManager($client);
 
-            if(!$travisManager->isValidRequestSignature($request)) {
-                return new Response("Invalid Signature", Response::HTTP_FORBIDDEN);
-            }
-
+            // Decode Travis Payload
             $payload = $travisManager->getDecodedPayload($request);
+
+            // Handle when is not the deployment branch
+            if ($payload['branch'] != $configModel->getDeployBranch()) {
+                return new Response("The branch in the received payload is not the deployment branch.", Response::HTTP_FORBIDDEN);
+            }
+            // Handle when state is not supported
+            if ($configModel->isStateSupported($payload['state'])) {
+                return new Response("Payload has an unsupported state.", Response::HTTP_FORBIDDEN);
+            }
 
             $ghbIssueManager = new GithubIssueManager($client);
 
             try {
                 $ghbIssueManager->postIssueOnTravisFail(
-                    $configManager->getAuthModel(),
+                    $configModel,
                     $payload
                 );
             } catch (\Exception $e){

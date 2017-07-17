@@ -2,31 +2,45 @@
 
 namespace Cj\Github\Manager;
 
-use Cj\Github\Model\AuthModel;
+use Cj\Github\Model\ConfigModel;
 use stdClass;
 
 class ConfigManager
 {
 
     private $config;
-    private $authModel;
 
-    function __construct(stdClass $config)
+    function __construct(array $config)
     {
         $this->config = $config;
-        $this->authModel = new AuthModel(
-            $config->auth['id'],
-            $config->auth['credentials']['username'],
-            $config->auth['credentials']['password'],
-            $config->auth['credentials']['project']
+    }
+
+    public function getConfigById(string $id): ?ConfigModel {
+        $element = $this->getElement($id);
+        return !empty($element) ? $this->createConfigModel($element): null;
+    }
+
+    public function getFirstConfig(): ConfigModel {
+        $element = $this->config[0];
+        return $this->createConfigModel($element);
+    }
+    private function createConfigModel(array $element):ConfigModel{
+        return new ConfigModel(
+            $element['credentials']['username'],
+            $element['credentials']['password'],
+            $element['project'],
+            $element['deploy_branch'],
+            $element['states']
         );
     }
+    private function getElement(string $id): array {
 
-    public function isValidId(string $id):bool {
-        return $this->authModel->getId() == $id;
-    }
+        foreach ($this->config as $element) {
+            if ($element['id'] == $id) {
+                return $element;
+            }
+        }
 
-    public function getAuthModel():AuthModel{
-        return $this->authModel;
+        return [];
     }
 }
