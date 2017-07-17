@@ -64,14 +64,15 @@ class App extends Application{
             $travisManager = new TravisManager($client);
 
             // Decode Travis Payload
-            $payload = $travisManager->getDecodedPayload($request);
+            $payloadString = $travisManager->getDecodedPayload($request);
+            $payload = json_decode($travisManager->getDecodedPayload($request),true);
 
             // Handle when is not the deployment branch
             if ($payload['branch'] != $configModel->getDeployBranch()) {
                 return new Response("The branch in the received payload is not the deployment branch.", Response::HTTP_FORBIDDEN);
             }
             // Handle when state is not supported
-            if ($configModel->isStateSupported($payload['state'])) {
+            if (!$configModel->isStateSupported($payload['state'])) {
                 return new Response("Payload has an unsupported state.", Response::HTTP_FORBIDDEN);
             }
 
@@ -80,7 +81,7 @@ class App extends Application{
             try {
                 $ghbIssueManager->postIssueOnTravisFail(
                     $configModel,
-                    $payload
+                    $payloadString
                 );
             } catch (\Exception $e){
                 return new Response("The issue was not posted to Github: ".$e->getMessage(), Response::HTTP_FORBIDDEN);

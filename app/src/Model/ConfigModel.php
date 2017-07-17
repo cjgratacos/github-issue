@@ -91,7 +91,7 @@ class ConfigModel
      * @param string $state
      * @return bool
      */
-    public function isStatusSupported(string $state): bool {
+    public function isStateSupported(string $state): bool {
         foreach ($this->states as $element) {
             if(strpos($state, $element) !== false) {
                 return true;
