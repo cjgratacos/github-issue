@@ -75,6 +75,10 @@ class App extends Application{
             if ($payload['branch'] != $configModel->getDeployBranch()) {
                 return new Response("The branch in the received payload is not the deployment branch.", Response::HTTP_FORBIDDEN);
             }
+            // Handle when build is a Pull Request
+            if ($travisManager->isBuildTypePullRequest($request)) {
+                return new Response("The build is a Pull Request, your Pull Request System should depend on a successful Travis build.", Response::HTTP_FORBIDDEN);
+            }
             // Handle when state is not supported
             if (!$configModel->isStateSupported($payload['state'])) {
                 return new Response("Payload has an unsupported state.", Response::HTTP_FORBIDDEN);

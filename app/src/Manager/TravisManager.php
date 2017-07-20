@@ -12,6 +12,7 @@ class TravisManager
     private const TRAVIS_SIGNATURE_HEADER = "signature";
     private const TRAVIS_CONFIG_URI = "https://api.travis-ci.org";
     private const TRAVIS_PAYLOAD = "payload";
+    private const TRAVIS_PULL_REQUEST = "pull_request";
 
     private $client;
 
@@ -56,6 +57,12 @@ class TravisManager
     public function getRepoSlug(Request $request): string {
         $repo = $this->getRepoInfo($request);
         return $repo['owner_name'] .'/'.$repo['name'];
+    }
+
+    public function isBuildTypePullRequest(Request $request):bool {
+        $repo = $this->getRepoInfo($request);
+
+        return $repo['type'] === TravisManager::TRAVIS_PULL_REQUEST;
     }
 
 }
