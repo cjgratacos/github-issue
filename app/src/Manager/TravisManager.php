@@ -31,6 +31,10 @@ class TravisManager
         return base64_decode($request->headers->get(TravisManager::TRAVIS_SIGNATURE_HEADER));
     }
 
+    private function getPayloadAsArray(Request $request):array {
+        return json_decode($this->getRawPayload($request), true);
+    }
+
     public function getDecodedPayload(Request $request):string {
         return urldecode($this->getRawPayload($request));
     }
@@ -49,7 +53,7 @@ class TravisManager
     }
 
     public function getRepoInfo(Request $request): array {
-        $payload = json_decode($this->getRawPayload($request), true);
+        $payload = $this->getPayloadAsArray($request);
 
         return $payload['repository'];
     }
@@ -60,9 +64,8 @@ class TravisManager
     }
 
     public function isBuildTypePullRequest(Request $request):bool {
-        $repo = $this->getRepoInfo($request);
+        $build = $this->getPayloadAsArray($request);
 
-        return $repo['type'] === TravisManager::TRAVIS_PULL_REQUEST;
+        return $build['type'] === TravisManager::TRAVIS_PULL_REQUEST;
     }
-
 }
